@@ -1,6 +1,7 @@
 package drc.project.toDoList.controller;
 
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import drc.project.toDoList.entitys.User;
 import drc.project.toDoList.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class UserController {
         if (usuario != null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Escolha outro username, por favor, esse já existe!");
         }
+
+        // cripto bd - password
+        var passwordHashred = BCrypt.withDefaults().hashToString(12 , user.getPassword().toCharArray());
+        user.setPassword(passwordHashred);
+
         var userCreated = this.userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso!");
     }
