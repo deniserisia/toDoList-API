@@ -8,6 +8,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -21,6 +22,9 @@ public class User {
     private String username;
     private String nome;
     private String password;
+    private UserRole role;
+
     @CreationTimestamp
     private LocalDateTime criacaoDoUsuario;
+
 }
