@@ -29,4 +29,10 @@ public class Task {
     @CreationTimestamp
     private LocalDateTime dataDeCadastroNaPlataforma;
 
+    public void setTitulo( String titulo) throws Exception {
+        if (titulo.length() > 50){
+            throw new Exception("O campo deve conter no máximo 50 caracteres.");
+        }
+        this.titulo = titulo;
+    }
 }
