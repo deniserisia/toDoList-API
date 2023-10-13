@@ -1,9 +1,8 @@
 package drc.project.toDoList.controller;
 
 import drc.project.toDoList.entitys.Task;
-import drc.project.toDoList.entitys.User;
 import drc.project.toDoList.repository.TaskRepository;
-import jakarta.servlet.http.HttpServlet;
+import drc.project.toDoList.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,6 @@ public class TaskController {
         task.setIdUser((UUID) idUser);
 
         var currentDate = LocalDateTime.now();
-
         if (currentDate.isAfter(task.getInicioDaTarefa()) || currentDate.isAfter(task.getFimDaTarefa())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de início / data de término  deve ser maior que a data atual.");
         }
@@ -42,9 +40,22 @@ public class TaskController {
 
         @GetMapping("/lista-das-minhas-tarefas")
         public List<Task> list(HttpServletRequest request){
-         var idUser = request.getAttribute("idUser");
-         var tasks = this.taskRepository.findByIdUser((UUID) idUser);
-         return tasks;
+        var idUser = request.getAttribute("idUser");
+        var tarefas = this.taskRepository.findByIdUser((UUID) idUser);
+        return tarefas;
         }
+
+        @PutMapping("/{id}")
+        public Task update(@RequestBody Task task, @PathVariable UUID id, HttpServletRequest request){
+            //var idUser = request.getAttribute("idUser");
+
+            var tarefaa = this.taskRepository.findById(id).orElse(null);
+            Utils.copyNonNullProperties(task, tarefaa);
+
+            //task.setIdUser((UUID) idUser);
+            //task.setId(id);
+            return this.taskRepository.save(tarefaa);
+        }
+
 
 }
